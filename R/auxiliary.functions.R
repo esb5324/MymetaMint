@@ -97,6 +97,7 @@ cb <- function(j){
 # Covariance estimation based on the cgm model
 # type1 = "continuous", type2 = "censored"
 cgm.covariance.mixed <- function(X1=NULL, X2, use.nearPD=TRUE){
+  print("alt function")
   if (is.null(X1)) {
     p <- 0; Q <- ncol(X2);
     y = X2;
