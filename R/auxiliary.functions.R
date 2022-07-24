@@ -85,6 +85,13 @@ cgm.bivariate <- function(y, y_L, mu, sig){
   ifelse(op==100, 0, unlist(op))
 }
 
+cb <- function(j){
+  if (j==1){next;}
+    for (k in 1:(j-1)){
+      return(cgm.bivariate(y[,c(j,k)],y_L = obj$y_L[c(j,k)],mu=obj$mu[c(j,k)],sig = obj$sd[c(j,k)]))
+    }
+}
+                 
 # Covariance estimation based on the cgm model
 # type1 = "continuous", type2 = "censored"
 cgm.covariance.mixed <- function(X1=NULL, X2, use.nearPD=TRUE){
@@ -100,13 +107,16 @@ cgm.covariance.mixed <- function(X1=NULL, X2, use.nearPD=TRUE){
   if (!is.null(X1)){
     corr_mat[1:p,1:p] <- cor(X1)
   }
-  for (j in (p+1):Q){
-    # cat('index...',j,'...\n')
-    if (j==1){next;}
-    for (k in 1:(j-1)){
-      corr_mat[j,k] <- corr_mat[k,j] <- cgm.bivariate(y[,c(j,k)],y_L = obj$y_L[c(j,k)],mu=obj$mu[c(j,k)],sig = obj$sd[c(j,k)])
-    }
-  }
+  temp <- mclapply((p+1):Q, cb, mc.cores=20)
+  corr_mat[upper.tri(corr_mat)][(p+1):Q,] <- do.call(rbind, temp)
+  corr_mat[lower.tri(corr_mat)]<-t(corr_mat)[lower.tri(corr_mat)]                                                 
+  #for (j in (p+1):Q){
+  #  # cat('index...',j,'...\n')
+  #  if (j==1){next;}
+  #  for (k in 1:(j-1)){
+  #    corr_mat[j,k] <- corr_mat[k,j] <- cgm.bivariate(y[,c(j,k)],y_L = obj$y_L[c(j,k)],mu=obj$mu[c(j,k)],sig = obj$sd[c(j,k)])
+  #  }
+  #}
 
   if ( use.nearPD == TRUE & min(eigen(corr_mat)$values) < 0 ) {
     message(" minimum eigenvalue of correlation estimator is ", min(eigen(corr_mat)$values), "\n nearPD is used")
