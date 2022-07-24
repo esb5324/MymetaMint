@@ -86,10 +86,12 @@ cgm.bivariate <- function(y, y_L, mu, sig){
 }
 
 cb <- function(j){
-  if (j==1){next;}
+  if (j==1){return}
+  else{
     for (k in 1:(j-1)){
       return(cgm.bivariate(y[,c(j,k)],y_L = obj$y_L[c(j,k)],mu=obj$mu[c(j,k)],sig = obj$sd[c(j,k)]))
     }
+  }
 }
                  
 # Covariance estimation based on the cgm model
