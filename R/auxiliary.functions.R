@@ -88,8 +88,9 @@ cgm.bivariate <- function(y, y_L, mu, sig){
 cb <- function(j, y_, object){
   if (j==1){return(0)}
   else{
+    res <- c()
     for (k in 1:(j-1)){
-      res <- cgm.bivariate(y_[,c(j,k)],y_L = object$y_L[c(j,k)],mu=object$mu[c(j,k)],sig = object$sd[c(j,k)])
+      res[k] <- cgm.bivariate(y_[,c(j,k)],y_L = object$y_L[c(j,k)],mu=object$mu[c(j,k)],sig = object$sd[c(j,k)])
       return(res)
     }
   }
