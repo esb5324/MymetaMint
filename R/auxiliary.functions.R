@@ -86,16 +86,14 @@ cgm.bivariate <- function(y, y_L, mu, sig){
 }
 
 cb <-  function(k, j_, y__, object_){
-  myoutput <- cgm.bivariate(y__[,c(j_,k)],y_L = object_$y_L[c(j_,k)],mu=object_$mu[c(j_,k)],sig = object_$sd[c(j_,k)])
-  return(myoutput)
+  return(cgm.bivariate(y__[,c(j_,k)],y_L = object_$y_L[c(j_,k)],mu=object_$mu[c(j_,k)],sig = object_$sd[c(j_,k)]))
 }
                  
 cb_vec <- function(j, y_, object){
-  if (j==1){res <- 0}
+  if (j==1){return(0)}
   else{
-    res <- sapply(c(1:(j-1)), cb, j_ = j, y__ = y_, object_ = object)
+    return(sapply(c(1:(j-1)), cb, j_ = j, y__ = y_, object_ = object))
   }
-  return(res)
 }
                  
 # Covariance estimation based on the cgm model
@@ -114,7 +112,7 @@ cgm.covariance.mixed <- function(X1=NULL, X2, use.nearPD=TRUE){
   if (!is.null(X1)){
     corr_mat[1:p,1:p] <- cor(X1)
   }
-  temp <- mclapply((p+1):Q, cb_vec, y_ = y, object = obj, mc.cores=20)
+  temp <- mclapply((p+1):Q, cb_vec, y_ = y, object = obj, mc.cores=40)
   for (j in (p+1):Q){
     for (k in 1:(j-1)){
       corr_mat[j,k] <- corr_mat[k,j] <- temp[[j]][k]
