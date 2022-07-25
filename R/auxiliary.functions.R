@@ -112,7 +112,7 @@ cgm.covariance.mixed <- function(X1=NULL, X2, use.nearPD=TRUE){
     corr_mat[1:p,1:p] <- cor(X1)
   }
   temp <- mclapply((p+1):Q, cb, y_ = y, object = obj, mc.cores=20)
-  print(str(temp))
+  print("temp"); print(str(temp)); print("do.call"); print(str(do.call(rbind, temp))
   corr_mat[upper.tri(corr_mat)][(p+1):Q,] <- do.call(rbind, temp)
   print(str(corr_mat))
   corr_mat[lower.tri(corr_mat)]<-t(corr_mat)[lower.tri(corr_mat)]  
