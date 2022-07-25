@@ -85,11 +85,12 @@ cgm.bivariate <- function(y, y_L, mu, sig){
   ifelse(op==100, 0, unlist(op))
 }
 
-cb <- function(j){
+cb <- function(j, y_, object){
   if (j==1){return}
   else{
     for (k in 1:(j-1)){
-      return(cgm.bivariate(y[,c(j,k)],y_L = obj$y_L[c(j,k)],mu=obj$mu[c(j,k)],sig = obj$sd[c(j,k)]))
+      res <- cgm.bivariate(y_[,c(j,k)],y_L = object$y_L[c(j,k)],mu=object$mu[c(j,k)],sig = object$sd[c(j,k)])
+      return(res)
     }
   }
 }
@@ -110,7 +111,7 @@ cgm.covariance.mixed <- function(X1=NULL, X2, use.nearPD=TRUE){
   if (!is.null(X1)){
     corr_mat[1:p,1:p] <- cor(X1)
   }
-  temp <- mclapply((p+1):Q, cb, mc.cores=20)
+  temp <- mclapply((p+1):Q, cb, y_ = y, object = obj, mc.cores=20)
   print(str(temp))
   corr_mat[upper.tri(corr_mat)][(p+1):Q,] <- do.call(rbind, temp)
   print(str(corr_mat))
