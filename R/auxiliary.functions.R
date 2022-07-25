@@ -91,8 +91,8 @@ cb <- function(j, y_, object){
     res <- c()
     for (k in 1:(j-1)){
       res[k] <- cgm.bivariate(y_[,c(j,k)],y_L = object$y_L[c(j,k)],mu=object$mu[c(j,k)],sig = object$sd[c(j,k)])
-      return(res)
     }
+    return(res)
   }
 }
                  
