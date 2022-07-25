@@ -86,7 +86,8 @@ cgm.bivariate <- function(y, y_L, mu, sig){
 }
 
 cb <-  function(k, j_, y__, object_){
-  return(cgm.bivariate(y__[,c(j_,k)],y_L = object_$y_L[c(j_,k)],mu=object_$mu[c(j_,k)],sig = object_$sd[c(j_,k)]))
+  myoutput <- cgm.bivariate(y__[,c(j_,k)],y_L = object_$y_L[c(j_,k)],mu=object_$mu[c(j_,k)],sig = object_$sd[c(j_,k)])
+  return(myoutput)
 }
                  
 cb_vec <- function(j, y_, object){
