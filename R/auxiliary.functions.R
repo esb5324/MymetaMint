@@ -90,9 +90,8 @@ cb <-  function(k, j_, y__, object_){
 }
                  
 cb_vec <- function(j, y_, object){
-  if (j==1){res <- 0}
-  else{
-    res <- sapply(c(1:(j-1)), cb, j_ = j, y__ = y_, object_ = object)
+  if (j>1){ res <- sapply(c(1:(j-1)), cb, j_ = j, y__ = y_, object_ = object)
+  else{ res <- 0
   }
   return(res)
 }
